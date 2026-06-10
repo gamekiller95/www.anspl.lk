@@ -1,107 +1,223 @@
-import { NextResponse } from 'next/server';
-import nodemailer from 'nodemailer';
+import { NextResponse } from "next/server";
+import nodemailer from "nodemailer";
+
+function escapeHtml(text = "") {
+  return String(text)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
 
 export async function POST(request) {
   try {
-    // 1. Extract the FormData from the incoming request
+    // Parse form data
     const formData = await request.formData();
-    
-    const corporateName = formData.get('corporateName');
-    const buyerName = formData.get('buyerName');
-    const email = formData.get('email');
-    const category = formData.get('category');
-    const quantity = formData.get('quantity');
-    const targetPrice = formData.get('targetPrice');
-    const specifications = formData.get('specifications');
-    
-    // 2. Extract files
-    const files = formData.getAll('files');
+
+    const corporateName = formData.get("corporateName")?.toString().trim();
+    const buyerName = formData.get("buyerName")?.toString().trim();
+    const email = formData.get("email")?.toString().trim();
+    const category = formData.get("category")?.toString().trim();
+    const quantity = formData.get("quantity")?.toString().trim();
+    const targetPrice = formData.get("targetPrice")?.toString().trim();
+    const specifications = formData.get("specifications")?.toString().trim();
+
+    // Basic validation
+    if (
+      !corporateName ||
+      !buyerName ||
+      !email ||
+      !category ||
+      !quantity
+    ) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: "Required fields are missing.",
+        },
+        { status: 400 }
+      );
+    }
+
+    // Process uploaded files
+    const files = formData.getAll("files");
     const attachments = [];
+
+    const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10 MB
 
     for (const file of files) {
       if (file && file.size > 0) {
-        // Convert the file binary into a Node.js Buffer
-        const arrayBuffer = await file.arrayBuffer();
-        const buffer = Buffer.from(arrayBuffer);
-        
+        if (file.size > MAX_FILE_SIZE) {
+          return NextResponse.json(
+            {
+              success: false,
+              error: `${file.name} exceeds 10MB limit.`,
+            },
+            { status: 400 }
+          );
+        }
+
+        const buffer = Buffer.from(await file.arrayBuffer());
+
         attachments.push({
           filename: file.name,
           content: buffer,
+          contentType: file.type,
         });
       }
     }
 
-    // 3. Configure Nodemailer Transporter
+    // SMTP transporter
+    const port = Number(process.env.SMTP_PORT || 465);
+
     const transporter = nodemailer.createTransport({
       host: process.env.SMTP_HOST,
-      port: parseInt(process.env.SMTP_PORT || '465'),
-      secure: process.env.SMTP_PORT === '465', // true for 465, false for other ports
+      port,
+      secure: port === 465,
       auth: {
         user: process.env.SMTP_USER,
         pass: process.env.SMTP_PASS,
       },
     });
 
-    // 4. Construct Email Layout
+    // Optional verification
+    await transporter.verify();
+
+    // Email template
     const mailOptions = {
-      from: `"${buyerName} via RFQ Portal" <${process.env.SMTP_USER}>`,
+      from: `"${escapeHtml(
+        buyerName
+      )} via RFQ Portal" <${process.env.SMTP_USER}>`,
+
       to: process.env.COMPANY_RECEIVER_EMAIL,
-      replyTo: email, // Allows you to hit 'Reply' directly to the buyer
-      subject: `[New RFQ Submission] ${corporateName} - ${category.toUpperCase()}`,
+
+      replyTo: email,
+
+      subject: `[New RFQ Submission] ${escapeHtml(
+        corporateName
+      )} - ${category.toUpperCase()}`,
+
       html: `
-        <div style="font-family: sans-serif; max-width: 600px; color: #333; line-height: 1.6;">
-          <h2 style="border-bottom: 2px solid #292524; padding-bottom: 10px; color: #1c1917;">
-            B2B Production RFQ Incoming
-          </h2>
-          <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
-            <tr>
-              <td style="padding: 8px 0; font-weight: bold; width: 35%;">Company Name:</td>
-              <td style="padding: 8px 0;">${corporateName}</td>
-            </tr>
-            <tr>
-              <td style="padding: 8px 0; font-weight: bold;">Contact Person:</td>
-              <td style="padding: 8px 0;">${buyerName}</td>
-            </tr>
-            <tr>
-              <td style="padding: 8px 0; font-weight: bold;">Buyer Email:</td>
-              <td style="padding: 8px 0;"><a href="mailto:${email}">${email}</a></td>
-            </tr>
-            <tr>
-              <td style="padding: 8px 0; font-weight: bold;">Form Category:</td>
-              <td style="padding: 8px 0; text-transform: capitalize;">${category}</td>
-            </tr>
-            <tr>
-              <td style="padding: 8px 0; font-weight: bold;">Total Quantity (Pcs):</td>
-              <td style="padding: 8px 0;">${quantity}</td>
-            </tr>
-            <tr>
-              <td style="padding: 8px 0; font-weight: bold;">Target FOB Price:</td>
-              <td style="padding: 8px 0;">${targetPrice}</td>
-            </tr>
-          </table>
-          
-          <div style="margin-top: 30px; background: #f5f5f4; padding: 15px; border-left: 4px solid #d97706;">
-            <h4 style="margin: 0 0 10px 0; color: #1c1917;">Fabric & Tech Specifications:</h4>
-            <p style="margin: 0; white-space: pre-wrap;">${specifications || 'No specific breakdown provided textually.'}</p>
-          </div>
-          
-          <p style="font-size: 11px; color: #78716c; margin-top: 40px; border-top: 1px solid #e7e5e4; padding-top: 10px;">
-            This email was auto-dispatched securely via your web platform's RFQ application pipeline.
+      <div style="font-family:Arial,sans-serif;max-width:700px;margin:auto;color:#333;line-height:1.6;">
+
+        <h2 style="border-bottom:2px solid #292524;padding-bottom:10px;">
+          New B2B RFQ Submission
+        </h2>
+
+        <table style="width:100%;border-collapse:collapse;">
+
+          <tr>
+            <td style="padding:8px;font-weight:bold;width:35%;">
+              Company Name
+            </td>
+            <td style="padding:8px;">
+              ${escapeHtml(corporateName)}
+            </td>
+          </tr>
+
+          <tr>
+            <td style="padding:8px;font-weight:bold;">
+              Contact Person
+            </td>
+            <td style="padding:8px;">
+              ${escapeHtml(buyerName)}
+            </td>
+          </tr>
+
+          <tr>
+            <td style="padding:8px;font-weight:bold;">
+              Email
+            </td>
+            <td style="padding:8px;">
+              <a href="mailto:${escapeHtml(email)}">
+                ${escapeHtml(email)}
+              </a>
+            </td>
+          </tr>
+
+          <tr>
+            <td style="padding:8px;font-weight:bold;">
+              Category
+            </td>
+            <td style="padding:8px;">
+              ${escapeHtml(category)}
+            </td>
+          </tr>
+
+          <tr>
+            <td style="padding:8px;font-weight:bold;">
+              Quantity
+            </td>
+            <td style="padding:8px;">
+              ${escapeHtml(quantity)}
+            </td>
+          </tr>
+
+          <tr>
+            <td style="padding:8px;font-weight:bold;">
+              Target FOB Price
+            </td>
+            <td style="padding:8px;">
+              ${escapeHtml(targetPrice || "-")}
+            </td>
+          </tr>
+
+        </table>
+
+        <div
+          style="
+            margin-top:25px;
+            background:#f5f5f5;
+            padding:15px;
+            border-left:4px solid #d97706;
+          "
+        >
+          <h3>Fabric / Technical Specifications</h3>
+
+          <p style="white-space:pre-wrap;margin:0;">
+            ${
+              specifications
+                ? escapeHtml(specifications)
+                : "No specifications provided."
+            }
           </p>
         </div>
+
+        <div style="margin-top:25px;">
+          <strong>Attached Files:</strong>
+          <p>${attachments.length} file(s) attached.</p>
+        </div>
+
+        <hr style="margin-top:30px;" />
+
+        <p style="font-size:12px;color:#777;">
+          This email was automatically generated by the RFQ Portal.
+        </p>
+
+      </div>
       `,
-      attachments: attachments, // Array mapping directly to Nodemailer format
+
+      attachments,
     };
 
-    // 5. Fire Email
     await transporter.sendMail(mailOptions);
 
-    return NextResponse.json({ success: true }, { status: 200 });
-
-  } catch (error) {
-    console.error('API RFQ Error:', error);
     return NextResponse.json(
-      { error: 'Internal processing error while dispatching email.' }, 
+      {
+        success: true,
+        message: "RFQ submitted successfully.",
+      },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.error("RFQ API Error:", error);
+
+    return NextResponse.json(
+      {
+        success: false,
+        error: "Failed to send RFQ email.",
+      },
       { status: 500 }
     );
   }
