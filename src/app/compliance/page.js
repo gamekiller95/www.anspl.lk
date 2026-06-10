@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { Factory, Layers, Cpu, ShieldAlert, CheckCircle2 } from 'lucide-react';
+import { Factory, Layers, Cpu, ShieldAlert, CheckCircle2, ChevronLeft, ChevronRight } from 'lucide-react';
 
 // Structuring the standard manufacturing matrix for high-volume apparel sourcing
 const FACTORY_DATA = [
@@ -15,38 +15,74 @@ const FACTORY_DATA = [
     capacity: "500,000 Pcs / Month",
     specialty: "Denim, Chinos, Heavy Wash Denim Jeans, Distressed Jackets, Laser-Engraved Garments",
     machinery: ["Mayer & Cie Circular Knitting", "Pegasus Overlock", "Santex Finishing Tunnels"],
-    compliance: ["BSCI", "OEKO-TEX", "SEDEX 4-Pillar", "RSC Approved"]
+    compliance: ["BSCI", "OEKO-TEX", "SEDEX 4-Pillar", "RSC Approved", "WRAP Gold", "GOTS Organic Certified"]
   },
   {
-    name: "Vanguard Woven Apparels Ltd.",
-    location: "Savar, Dhaka",
-    category: "woven",
-    lines: 18,
-    workers: "2,200+",
-    capacity: "500,000 Pcs / Month",
-    specialty: "Casual Button-Down Shirts, Structured Chinos, Cargo Shorts",
-    machinery: ["Juki Automatic Pocket Setters", "Brother Programmable Quilting", "Macpi Pressing Units"],
-    compliance: ["WRAP Gold", "BSCI", "RSC Approved"]
-  },
-  {
-    name: "Dhaka Denim Matrix & Wash Facility",
+    name: "Asrotex Group.",
     location: "Narayanganj, Bangladesh",
-    category: "denim",
-    lines: 12,
-    workers: "1,500+",
-    capacity: "400,000 Pcs / Month",
+    category: "knit",
+    lines: 40,
+    workers: "2,200+",
+    capacity: "1,500,000 Pcs / Month",
+    specialty: "Sweaters, cardigans, baby blankets, and summer tees,Beanies etc.",
+    machinery: ["Mayer & Cie Circular Knitting", "Pegasus Overlock", "Santex Finishing Tunnels"],
+    compliance: ["WRAP Gold", "BSCI", "RSC Approved", "OEKO-TEX", "SEDEX", "GOTS Organic Certified"]
+  },
+  {
+    name: "Pretty Group.",
+    location: "Dhaka, Bangladesh",
+    category: "woven",
+    lines: 28,
+    workers: "2,500+",
+    capacity: "3,000,000 Pcs / Month",
     specialty: "Heavy Wash Denim Jeans, Distressed Jackets, Laser-Engraved Garments",
     machinery: ["VAV Laser Engraving Systems", "Tonello Eco-Wash Tumbelers", "Juki Heavy-Duty Twin Needle"],
-    compliance: ["GOTS Organic Certified", "GRS (Recycled Claim)", "Sedex Member"]
+    compliance: ["GOTS Organic Certified", "GRS (Recycled Claim)", "Sedex Member", "WRAP Gold", "BSCI", "RSC Approved"]
+  },
+ {
+    name: "Pretty Group.",
+    location: "Dhaka, Bangladesh",
+    category: "woven",
+    lines: 28,
+    workers: "2,500+",
+    capacity: "3,000,000 Pcs / Month",
+    specialty: "Heavy Wash Denim Jeans, Distressed Jackets, Laser-Engraved Garments",
+    machinery: ["VAV Laser Engraving Systems", "Tonello Eco-Wash Tumbelers", "Juki Heavy-Duty Twin Needle"],
+    compliance: ["GOTS Organic Certified", "GRS (Recycled Claim)", "Sedex Member", "WRAP Gold", "BSCI", "RSC Approved"]
+  },
+  {
+    name: "Ananta Group.",
+    location: "Dhaka, Bangladesh",
+    category: "knit",
+    lines: 32,
+    workers: "4,000+",
+    capacity: "3,000,000 Pcs / Month",
+    specialty: "Underwear, Sleepwear, and Lingerie, bra, briefs, shapewear",
+    machinery: ["VAV Laser Engraving Systems", "Tonello Eco-Wash Tumbelers", "Juki Heavy-Duty Twin Needle"],
+    compliance: ["GOTS Organic Certified", "GRS (Recycled Claim)", "Sedex Member", "WRAP Gold", "BSCI", "RSC Approved"]
   }
 ];
 
 export default function AssociatedFactories() {
   const [filter, setFilter] = useState('all');
+  const [currentPage, setCurrentPage] = useState(1);
+  const factoriesPerPage = 4;
+
+  // Handle filter changes and reset to page 1
+  const handleFilterChange = (type) => {
+    setFilter(type);
+    setCurrentPage(1); 
+  };
 
   const filteredFactories = filter === 'all' 
     ? FACTORY_DATA 
     : FACTORY_DATA.filter(f => f.category === filter);
+
+  // Pagination Logic
+  const indexOfLastFactory = currentPage * factoriesPerPage;
+  const indexOfFirstFactory = indexOfLastFactory - factoriesPerPage;
+  const currentFactories = filteredFactories.slice(indexOfFirstFactory, indexOfLastFactory);
+  const totalPages = Math.ceil(filteredFactories.length / factoriesPerPage);
 
   // Consolidated statistics for corporate profiling
   const totalCapacity = "1.8 Million Pcs / Month";
@@ -54,10 +90,9 @@ export default function AssociatedFactories() {
   const aggregateWorkers = "6,500+ Certified Operators";
 
   return (
-    // FIX 1: Removed 'pt-32' and 'px-6' from the outer wrapper container
     <div className="bg-[#f7f7f5] min-h-screen pb-20 text-stone-900 w-full">
       
-      {/* FIX 2: Full-width container header block stretching completely to viewport edges */}
+      {/* Full-width container header block */}
       <div className="w-full bg-stone-900 text-white pt-32 pb-12 px-6 mb-16">
         <div className="max-w-6xl mx-auto">
           
@@ -70,7 +105,7 @@ export default function AssociatedFactories() {
             </p>
           </div>
 
-          {/* INDUSTRIAL METRICS OVERVIEW INSIDE DARK HERO */}
+          {/* INDUSTRIAL METRICS OVERVIEW */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 border-t border-stone-800 py-8 text-center sm:text-left">
             <div>
               <span className="text-[10px] uppercase tracking-widest text-stone-400 block mb-1">Aggregate Output</span>
@@ -89,7 +124,7 @@ export default function AssociatedFactories() {
         </div>
       </div>
 
-      {/* FIX 3: Isolated structural wrapper container keeping the main content cleanly centered */}
+      {/* Main content cleanly centered */}
       <div className="max-w-6xl mx-auto px-6">
 
         {/* TAB FILTER SELECTION */}
@@ -97,7 +132,7 @@ export default function AssociatedFactories() {
           {['all', 'knit', 'woven', 'denim'].map((type) => (
             <button
               key={type}
-              onClick={() => setFilter(type)}
+              onClick={() => handleFilterChange(type)}
               className={`text-xs uppercase tracking-widest pb-2 px-1 transition-all border-b-2 font-medium bg-transparent border-none cursor-pointer ${
                 filter === type 
                   ? 'border-stone-900 text-stone-900 font-bold' 
@@ -111,7 +146,7 @@ export default function AssociatedFactories() {
 
         {/* DYNAMIC FACTORY LISTING LAYOUT */}
         <div className="space-y-8">
-          {filteredFactories.map((factory, index) => (
+          {currentFactories.map((factory, index) => (
             <div key={index} className="bg-white border border-stone-200/80 p-8 flex flex-col lg:flex-row gap-8 justify-between hover:shadow-sm transition-shadow">
               
               {/* PRIMARY DETAILS */}
@@ -180,7 +215,39 @@ export default function AssociatedFactories() {
 
             </div>
           ))}
+          
+          {/* Fallback empty state if filter yields zero results */}
+          {currentFactories.length === 0 && (
+            <div className="text-center py-12 text-stone-400 text-sm border border-dashed border-stone-200 bg-white">
+              No matching facilities found for this classification.
+            </div>
+          )}
         </div>
+
+        {/* PAGINATION INTERFACE */}
+        {totalPages > 1 && (
+          <div className="flex items-center justify-between border-t border-stone-200 pt-6 mt-8">
+            <div className="text-xs text-stone-500">
+              Showing page <span className="font-bold text-stone-800">{currentPage}</span> of <span className="font-bold text-stone-800">{totalPages}</span>
+            </div>
+            <div className="flex gap-2">
+              <button
+                onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                disabled={currentPage === 1}
+                className="flex items-center gap-1 px-3 py-2 border border-stone-300 rounded-sm text-xs uppercase tracking-wider transition-colors bg-white hover:bg-stone-50 disabled:opacity-40 disabled:hover:bg-white cursor-pointer"
+              >
+                <ChevronLeft size={14} /> Prev
+              </button>
+              <button
+                onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                disabled={currentPage === totalPages}
+                className="flex items-center gap-1 px-3 py-2 border border-stone-300 rounded-sm text-xs uppercase tracking-wider transition-colors bg-white hover:bg-stone-50 disabled:opacity-40 disabled:hover:bg-white cursor-pointer"
+              >
+                Next <ChevronRight size={14} />
+              </button>
+            </div>
+          </div>
+        )}
 
         {/* RE-ROUTING GATEWAY */}
         <div className="mt-16 bg-stone-900 text-white p-8 md:p-12 text-center space-y-4">

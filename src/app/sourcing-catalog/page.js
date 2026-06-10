@@ -106,6 +106,32 @@ const APPAREL_CATEGORIES = [
         image: '/images/products/knit.png'
       }
     ]
+  },
+    {
+    id: 'intimates',
+    title: 'Intimate Apparel',
+    items: ['Underwear', 'Sleepwear', 'Lingerie', 'Shapewear'],
+    capacity: '1,000,000 Pcs / Month',
+    leadTime: '60-75 Days',
+    moq: '3,000 Pcs per style',
+    products: [
+      {
+        name: 'Authentic 5-Pocket Selvedge Denim',
+        fabrication: '99% Ringspun Cotton / 1% Eco-Stretch Denim',
+        weight: '12 - 14 oz',
+        features: 'Deep indigo rope-dyed, classic rigid structure, raw variant available.',
+        imagePlaceholder: '3x1 Right Hand Twill',
+        image: '/images/products/knit.png'
+      },
+      {
+        name: 'Vintage Distressed Trucker Jacket',
+        fabrication: '100% Cotton Sustainable Cotton Initiative Open-End',
+        weight: '11.5 - 13 oz',
+        features: 'Sustainable laser scraping, eco-stonewash processing, customized metal shanks.',
+        imagePlaceholder: 'Heavy Denim Construction',
+        image: '/images/products/knit.png'
+      }
+    ]
   }
 ];
 

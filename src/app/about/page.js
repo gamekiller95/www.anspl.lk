@@ -20,8 +20,16 @@ export default function AboutUs() {
   const reviews = [
     { quote: "SourcingHub has completely transformed our supply chain reliability. Their strict AQL adherence ensures we rarely face QA friction.", author: "Peter Grondin", company: "Pardon International, France" },
     { quote: "Finding fully compliant, LEED-certified factory matches in Bangladesh was a breeze with their local network infrastructure.", author: "Elena Rostova", company: "Urban Vibe, Germany" },
-    { quote: "Their transparency on fabric certification and carbon footprint metrics made our pivot to sustainable apparel effortless.", author: "Jameson Blake", company: "Econic Label, UK" },
     { quote: "Their transparency on fabric certification and carbon footprint metrics made our pivot to sustainable apparel effortless.", author: "Jameson Blake", company: "Econic Label, UK" }
+  ];
+
+  // NEW: Clients section data array
+  // If a client does not have a website, leave url as an empty string '' or omit it completely.
+  const clients = [
+    { name: 'Pardon International', logo: '/logos/pardon.svg', url: 'https://www.pardon.re/fr/' },
+    { name: 'Lebon', logo: '/logos/lebon.svg', url: 'https://www.urbanvibe.de' },
+    { name: 'Bisco', logo: '/logos/bisco.svg', url: 'https://www.econiclabel.co.uk' },
+    { name: 'Sentencia Pace', logo: '/logos/sentencia.png', url: 'https://www.econiclabel.co.uk' }, // Non-clickable example
   ];
 
   // Auto-sliding review logic
@@ -38,7 +46,7 @@ export default function AboutUs() {
     <div className="bg-[#f7f7f5] min-h-screen pb-20 text-stone-900 w-full">
       
       {/* SECTION 1: HERO CONTAINER */}
-      <div className="w-full bg-stone-900 text-white pt-32 pb-20 px-6 mb-20">
+      <div className="w-full bg-stone-900 text-white pt-32 pb-20 px-6 mb-0">
         <div className="max-w-5xl mx-auto text-center">
           <p className="uppercase tracking-[0.4em] text-xs text-amber-400 font-semibold mb-2">Our Profile</p>
           <h1 className="font-serif text-4xl md:text-5xl tracking-tight mb-6 text-white">Apparel Network Solution</h1>
@@ -52,7 +60,7 @@ export default function AboutUs() {
       <div className="max-w-5xl mx-auto px-6">
         
         {/* SECTION 2: VALUES/PHILOSOPHY */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 mb-24 border-t border-stone-200/60 pt-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 mb-12 border-t border-stone-200/60 pt-16">
           <div>
             <h2 className="font-serif text-2xl uppercase tracking-wide mb-4">Ethical Procurement</h2>
             <p className="text-stone-500 text-xs leading-relaxed">
@@ -67,8 +75,8 @@ export default function AboutUs() {
           </div>
         </div>
 
-        {/* NEW SECTION: DIRECTOR & MANAGING DIRECTOR SPEECH */}
-        <div className="bg-stone-100 border border-stone-200/80 p-8 md:p-12 mb-24 rounded-sm">
+        {/* SECTION 3: DIRECTOR & MANAGING DIRECTOR SPEECH */}
+        <div className="bg-stone-100 border border-stone-200/80 p-8 md:p-12 mb-0 rounded-sm">
           <div className="max-w-3xl mx-auto text-center mb-8">
             <p className="uppercase tracking-[0.3em] text-[10px] text-amber-500 font-bold mb-2">Leadership Insights</p>
             <h3 className="font-serif text-2xl uppercase tracking-wider">Executive Address</h3>
@@ -101,8 +109,8 @@ export default function AboutUs() {
           </div>
         </div>
 
-        {/* SECTION 3: TIMELINE MILESTONES */}
-        <div className="mb-24 border-t border-stone-200/60 pt-16">
+        {/* SECTION 4: TIMELINE MILESTONES */}
+        <div className="mb-4 border-t border-stone-200/60 pt-12">
           <h3 className="font-serif text-2xl text-center uppercase tracking-wider mb-12">Our Journey Matrix</h3>
           <div className="space-y-8 max-w-3xl mx-auto">
             {milestones.map((item, index) => (
@@ -119,8 +127,48 @@ export default function AboutUs() {
           </div>
         </div>
 
-        {/* SECTION 4: MANAGEMENT DESK */}
-        <div className="bg-white border border-stone-200 p-8 md:p-12 mb-24">
+        {/* NEW SECTION: GLOBAL CLIENTS LOGO GRID */}
+        <div className="mb-10 border-t border-stone-200/60 pt-10">
+          <p className="uppercase tracking-[0.3em] text-[10px] text-amber-500 font-bold text-center mb-2">Our Global Footprint</p>
+          <h3 className="font-serif text-2xl text-center uppercase tracking-wider mb-12">Trusted Partners</h3>
+          
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 items-center justify-items-center">
+            {clients.map((client, index) => {
+              const content = (
+                <img 
+                  src={client.logo} 
+                  alt={`${client.name} Logo`} 
+                  className={`h-28 w-auto object-contain color opacity-60 transition-all duration-300 ${
+                    client.url ? 'hover:grayscale-0 hover:opacity-100 hover:scale-105' : ''
+                  }`}
+                />
+              );
+
+              return (
+                <div key={index} className="w-full flex justify-center p-4">
+                  {client.url ? (
+                    <a 
+                      href={client.url} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      title={`Visit ${client.name} official website`}
+                      className="cursor-pointer"
+                    >
+                      {content}
+                    </a>
+                  ) : (
+                    <div title={`${client.name} (No website available)`}>
+                      {content}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* SECTION 5: MANAGEMENT DESK */}
+        <div className="bg-white border border-stone-200 p-8 md:p-12 mb-0">
           <h3 className="font-serif text-2xl tracking-wide uppercase border-b pb-4 border-stone-100 mb-8 text-center sm:text-left">
             Sourcing Command Center
           </h3>
@@ -140,8 +188,8 @@ export default function AboutUs() {
           </div>
         </div>
 
-        {/* NEW SECTION: AUTO-SLIDING CUSTOMER REVIEWS */}
-        <div className="border-t border-b border-stone-200/60 py-16 mb-24 text-center">
+        {/* SECTION 6: AUTO-SLIDING CUSTOMER REVIEWS */}
+        <div className="border-t border-b border-stone-200/60 py-16 mb-4 text-center">
           <p className="uppercase tracking-[0.3em] text-[10px] text-amber-500 font-bold mb-4">Global Partner Feedback</p>
           <div className="max-w-2xl mx-auto h-32 md:h-24 flex items-center justify-center relative overflow-hidden">
             {reviews.map((review, index) => (
