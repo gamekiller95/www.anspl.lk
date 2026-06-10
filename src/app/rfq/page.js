@@ -19,7 +19,7 @@ export default function RequestForQuote() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const fileInputRef = useRef(null);
 
-  const MAX_SIZE_MB = 20;
+  const MAX_SIZE_MB = 4;
   const MAX_SIZE_BYTES = MAX_SIZE_MB * 1024 * 1024;
 
   const handleChange = (e) => {
@@ -201,7 +201,7 @@ export default function RequestForQuote() {
             {/* NEW: Attachment Panel Component */}
             <div>
               <label className="block text-[10px] uppercase tracking-widest text-stone-400 font-bold mb-2">
-                Tech-packs & Document Attachments (Max 20MB)
+                Tech-packs & Document Attachments (Max 4MB)
               </label>
               <div 
                 onClick={() => fileInputRef.current?.click()}
@@ -219,7 +219,7 @@ export default function RequestForQuote() {
                   Click to upload target design specifications or Techpacks
                 </p>
                 <p className="text-[10px] text-stone-400 mt-1">
-                  PDF, ZIP, Excel, Word or Images up to 20MB
+                  PDF, ZIP, Excel, Word or Images up to 4MB
                 </p>
               </div>
 
