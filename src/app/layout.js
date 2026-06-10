@@ -70,21 +70,29 @@ export default function RootLayout({ children }) {
         <main className="flex-grow">{children}</main>
 
         {/* THIN COMPACT FOOTER */}
-        <footer className="bg-stone-900 text-white pt-8 pb-4 px-6 border-t border-stone-800">
+        <footer className="bg-stone-900 text-white pt-2 pb-2 px-4 border-t border-stone-800">
           <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6 mb-2">
             
-            {/* Corporate Office */}
+            {/* Contact Information */}
             <div className="space-y-2">
-              <h4 className="text-[14px] uppercase tracking-[0.3em] text-amber-400 font-bold">HQ Office</h4>
-              <div className="text-[11px] text-stone-400 leading-relaxed">
+              <h4 className="text-[14px] uppercase tracking-[0.3em] text-amber-400 font-bold">Contact Us</h4>
+              <div className="text-[11px] text-stone-400 leading-relaxed flex flex-col gap-1">
                 <a href="https://maps.google.com" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 hover:text-white transition">
-                  <MapPin size={12} className="text-amber-400" /> BD Office: Nizam Tower, Level 4, Avenue 9, Diabari, Dhaka, Bangladesh
+                  <MapPin size={12} className="text-amber-400 flex-shrink-0" /> 
+                  <span>BD Office: Nizam Tower, Level 4, Avenue 9, Diabari, Dhaka, Bangladesh</span>
                 </a>
                 <a href="https://maps.google.com" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 hover:text-white transition">
-                  <MapPin size={12} className="text-amber-400" /> Sri-Lanka Office: 187/D, Weda Mawatha, Piliyandala, Srilanka
+                  <MapPin size={12} className="text-amber-400 flex-shrink-0" /> 
+                  <span>Sri-Lanka Office: 187/D, Weda Mawatha, Piliyandala, Srilanka</span>
                 </a>
-                <a href="tel:+880123456789" className="flex items-center gap-2 hover:text-white mt-1">
-                  <Phone size={12} className="text-amber-400" /> +880 9614-666 555
+                <a href="tel:+8809614666555" className="flex items-center gap-2 hover:text-white transition mt-0.5">
+                  <Phone size={12} className="text-amber-400 flex-shrink-0" /> 
+                  <span>+880 9614-666 555</span>
+                </a>
+                {/* ADDED EMAIL ADDRESS HERE */}
+                <a href="mailto:info@anspl.lk" className="flex items-center gap-2 hover:text-white transition mt-0.5">
+                  <Mail size={12} className="text-amber-400 flex-shrink-0" /> 
+                  <span>info@anspl.lk</span>
                 </a>
               </div>
             </div>
@@ -105,7 +113,7 @@ export default function RootLayout({ children }) {
               <h4 className="text-[14px] uppercase tracking-[0.3em] text-amber-400 font-bold">Market Intelligence</h4>
               <p className="text-[10px] text-stone-400">Get monthly apparel trade reports.</p>
               <div className="flex md:justify-end">
-                <input type="info@anspl.lk" placeholder="Corporate Email" className="bg-stone-800 text-[11px] px-3 py-1.5 w-40 outline-none border border-transparent focus:border-amber-400 transition-all text-white" />
+                <input type="email" placeholder="Corporate Email" className="bg-stone-800 text-[11px] px-3 py-1.5 w-40 outline-none border border-transparent focus:border-amber-400 transition-all text-white" />
                 <button className="bg-amber-400 text-black px-3 py-1.5 text-[9px] uppercase font-bold tracking-widest hover:bg-white">Subscribe</button>
               </div>
             </div>
