@@ -120,7 +120,7 @@ export default function RootLayout({ children }) {
           </div>
 
           {/* Bottom Copyright */}
-          <div className="max-w-7xl mx-auto pt-4 border-t border-stone-800/50 text-center">
+          <div className="max-w-7xl mx-auto pt-0 border-t border-stone-800/50 text-center">
             <p className="text-[9px] tracking-[0.4em] text-stone-500 uppercase">
               © {new Date().getFullYear()} APPAREL NETWORK SOLUTION (PVT) LIMITED. ALL RIGHTS RESERVED.
             </p>
