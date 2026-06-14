@@ -3,141 +3,39 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { ArrowLeft, Layers, Weight, ShieldCheck } from 'lucide-react';
+import { APPAREL_CATEGORIES } from './apparelData'; // Import your clean item data
 
-const APPAREL_CATEGORIES = [
-  {
-    id: 'knit',
-    title: 'Knitwear & Jersey',
-    items: ['T-Shirts & Polo Shirts', 'Hoodies & Sweatshirts', 'Tank Tops', 'Activewear & Leisurewear'],
-    capacity: '1.5 Million Pcs / Month',
-    leadTime: '60-75 Days',
-    moq: '1,500 Pcs per style',
-    products: [
-      {
-        name: 'Premium Pique Polo',
-        fabrication: '100% Combed Cotton / Organic Blend CVC',
-        weight: '200 - 220 GSM',
-        features: 'High colorfastness to washing, silicone soft-finish, reactive dyed.',
-        imagePlaceholder: 'Pique Knit Structure',
-        image: '/images/products/2.png'
-      },
-      {
-        name: 'Classic Luxury Hoodie',
-        fabrication: '80% Organic Cotton / 20% Polyester Terry',
-        weight: '320 - 360 GSM',
-        features: 'Brushed fleece lining, anti-pilling coat, heavy rib cuffs.',
-        imagePlaceholder: 'Heavy Fleece Knit',
-        image: '/images/products/1.png'
-      },
-      {
-        name: 'Performance Running Tee',
-        fabrication: '100% Recycled Polyester (Interlock Mesh)',
-        weight: '140 - 160 GSM',
-        features: 'Moisture-wicking yarn treatment, antimicrobial finish, breathable.',
-        imagePlaceholder: 'Micro-Mesh Interlock',
-        image: '/images/products/knit.png'
-      },
-      {
-      name: 'French Terry Lounge Shorts',
-      fabrication: '100% Organic Cotton French Terry',
-      weight: '280 - 300 GSM',
-      features: 'Unbrushed loopback interior, heavy drawstring waist, reinforced side pockets.',
-      imagePlaceholder: 'Loopback French Terry',
-      image: '/images/products/shorts.png' // Ensure this file exists or leave as '' for fallback
-      }
-    ]
-  },
-  {
-    id: 'woven',
-    title: 'Woven Garments',
-    items: ['Casual & Formal Shirts', 'Chinos & Cargo Pants', 'Blouses & Tops', 'Lightweight Jackets'],
-    capacity: '800,000 Pcs / Month',
-    leadTime: '75-90 Days',
-    moq: '2,000 Pcs per style',
-    products: [
-      {
-        name: 'Tailored Poplin Shirt',
-        fabrication: '100% Egyptian Giza Cotton (Easy-Iron Finish)',
-        weight: '110 - 125 GSM',
-        features: 'High tensile strength seams, clean collar stitch alignment.',
-        imagePlaceholder: 'Poplin Plain Weave',
-        image: '/images/products/knit.png'
-      },
-      {
-        name: 'Utility Cargo Chino',
-        fabrication: '98% Cotton / 2% Elastane Stretch Twill',
-        weight: '260 - 290 GSM',
-        features: 'Heavy duty bar-tack reinforces, YKK zipper fly, enzyme washed.',
-        imagePlaceholder: 'Stretch Twill Weave',
-        image: '/images/products/knit.png'
-      },
-      {
-        name: 'Technical Windbreaker',
-        fabrication: '100% Nylon Ripstop with DWR Coating',
-        weight: '80 - 100 GSM',
-        features: 'Water-repellent treatment, windproof laminations, taped construction.',
-        imagePlaceholder: 'Ripstop Technical Grid',
-        image: '/images/products/knit.png'
-      }
-    ]
-  },
-  {
-    id: 'denim',
-    title: 'Denim & Heavy Wash',
-    items: ['Jeans & Denim Trousers', 'Denim Jackets', 'Chambray Shirts', 'Heavy Washed Twill Wear'],
-    capacity: '600,000 Pcs / Month',
-    leadTime: '90 Days (with specialized wash)',
-    moq: '2,500 Pcs per style',
-    products: [
-      {
-        name: 'Authentic 5-Pocket Selvedge Denim',
-        fabrication: '99% Ringspun Cotton / 1% Eco-Stretch Denim',
-        weight: '12 - 14 oz',
-        features: 'Deep indigo rope-dyed, classic rigid structure, raw variant available.',
-        imagePlaceholder: '3x1 Right Hand Twill',
-        image: '/images/products/knit.png'
-      },
-      {
-        name: 'Vintage Distressed Trucker Jacket',
-        fabrication: '100% Cotton Sustainable Cotton Initiative Open-End',
-        weight: '11.5 - 13 oz',
-        features: 'Sustainable laser scraping, eco-stonewash processing, customized metal shanks.',
-        imagePlaceholder: 'Heavy Denim Construction',
-        image: '/images/products/knit.png'
-      }
-    ]
-  },
-    {
-    id: 'intimates',
-    title: 'Intimate Apparel',
-    items: ['Underwear', 'Sleepwear', 'Lingerie', 'Shapewear'],
-    capacity: '1,000,000 Pcs / Month',
-    leadTime: '60-75 Days',
-    moq: '3,000 Pcs per style',
-    products: [
-      {
-        name: 'Authentic 5-Pocket Selvedge Denim',
-        fabrication: '99% Ringspun Cotton / 1% Eco-Stretch Denim',
-        weight: '12 - 14 oz',
-        features: 'Deep indigo rope-dyed, classic rigid structure, raw variant available.',
-        imagePlaceholder: '3x1 Right Hand Twill',
-        image: '/images/products/knit.png'
-      },
-      {
-        name: 'Vintage Distressed Trucker Jacket',
-        fabrication: '100% Cotton Sustainable Cotton Initiative Open-End',
-        weight: '11.5 - 13 oz',
-        features: 'Sustainable laser scraping, eco-stonewash processing, customized metal shanks.',
-        imagePlaceholder: 'Heavy Denim Construction',
-        image: '/images/products/knit.png'
-      }
-    ]
-  }
-];
+// A smart sub-component to handle images seamlessly
+function ProductCardImage({ product }) {
+  const [imgFailed, setImgFailed] = useState(false);
+
+  const fallbackUI = (
+    <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center bg-stone-900 pointer-events-none">
+      <span className="text-[10px] uppercase tracking-[0.3em] font-bold text-amber-400 mb-1">Fabric Specimen</span>
+      <span className="font-serif text-sm tracking-wide text-white/90">{product.imagePlaceholder}</span>
+    </div>
+  );
+
+  return (
+    <div className="bg-stone-900 aspect-square w-full relative overflow-hidden border-b border-stone-200 group flex items-center justify-center">
+      {product.image && !imgFailed ? (
+        <img 
+          src={product.image} 
+          alt={product.name} 
+          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+          onError={() => setImgFailed(true)}
+        />
+      ) : fallbackUI}
+    </div>
+  );
+}
 
 export default function SourcingCatalog() {
   const [activeTab, setActiveTab] = useState('all');
   const [selectedCategory, setSelectedCategory] = useState(null);
+
+  // Dynamically pull categories for navigation filters based on data file
+  const navigationTabs = ['all', ...APPAREL_CATEGORIES.map(cat => cat.id)];
 
   const filteredCategories = activeTab === 'all' 
     ? APPAREL_CATEGORIES 
@@ -147,11 +45,8 @@ export default function SourcingCatalog() {
   if (selectedCategory) {
     return (
       <div className="bg-[#f7f7f5] min-h-screen pb-20 text-stone-900 w-full">
-        
-        {/* Full-width dynamic header wrapper for selected categories */}
         <div className="w-full bg-stone-900 text-white pt-32 pb-16 px-6 mb-12">
           <div className="max-w-6xl mx-auto">
-            {/* BACK BREADCRUMB BUTTON */}
             <button 
               onClick={() => setSelectedCategory(null)}
               className="group flex items-center gap-2 text-xs uppercase tracking-widest text-stone-400 hover:text-white mb-8 transition-colors bg-transparent border-none p-0 cursor-pointer"
@@ -160,7 +55,6 @@ export default function SourcingCatalog() {
               Back to Range Sourcing Catalog
             </button>
 
-            {/* CATEGORY TITLE DATA */}
             <div>
               <span className="text-[10px] uppercase tracking-widest text-amber-400 font-bold block mb-1">Production Division</span>
               <h1 className="font-serif text-4xl text-white tracking-tight">{selectedCategory.title} Matrix</h1>
@@ -171,45 +65,13 @@ export default function SourcingCatalog() {
           </div>
         </div>
 
-        {/* Content Body Layout wrapper */}
         <div className="max-w-6xl mx-auto px-6">
-          
-          {/* PRODUCTION SPECIFICATIONS SPECIFIC TO THIS GROUP */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
             {selectedCategory.products.map((product, idx) => (
               <div key={idx} className="bg-white border border-stone-200 flex flex-col justify-between hover:shadow-sm transition-shadow">
                 
-                {/* VISUAL CONTAINER - FIXED TO RENDER PRODUCT IMAGE */}
-                <div className="bg-stone-900 aspect-square w-full relative overflow-hidden border-b border-stone-200 group flex items-center justify-center">
-                  {product.image ? (
-                    <img 
-                      src={product.image} 
-                      alt={product.name} 
-                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                      onError={(e) => {
-                        // Fallback handling if target asset file path fails or 404s
-                        e.target.style.display = 'none';
-                        if(e.target.nextSibling) {
-                          e.target.nextSibling.style.display = 'flex';
-                        }
-                      }}
-                    />
-                  ) : null}
-
-                  {/* Fallback layout UI layer if image is broken or empty */}
-                  <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center bg-stone-900 pointer-events-none style-fallback hidden">
-                    <span className="text-[10px] uppercase tracking-[0.3em] font-bold text-amber-400 mb-1">Fabric Specimen</span>
-                    <span className="font-serif text-sm tracking-wide text-white/90">{product.imagePlaceholder}</span>
-                  </div>
-
-                  {/* Immediate layout when image hasn't loaded or is evaluated */}
-                  {!product.image && (
-                    <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center bg-stone-900 pointer-events-none">
-                      <span className="text-[10px] uppercase tracking-[0.3em] font-bold text-amber-400 mb-1">Fabric Specimen</span>
-                      <span className="font-serif text-sm tracking-wide text-white/90">{product.imagePlaceholder}</span>
-                    </div>
-                  )}
-                </div>
+                {/* Visual Image Handler */}
+                <ProductCardImage product={product} />
 
                 {/* FABRIC SPEC DATA SHEETS */}
                 <div className="p-6 space-y-4 flex-1 flex flex-col justify-between">
@@ -243,7 +105,6 @@ export default function SourcingCatalog() {
             ))}
           </div>
 
-          {/* REDIRECT OPTIONS BOX */}
           <div className="bg-stone-900 text-white p-8 border border-stone-800 flex flex-col sm:flex-row justify-between items-center gap-6">
             <div className="text-center sm:text-left">
               <h4 className="font-serif text-lg">Require specialized fabrication counts or treatments?</h4>
@@ -253,7 +114,6 @@ export default function SourcingCatalog() {
               Open Custom RFQ Build
             </Link>
           </div>
-
         </div>
       </div>
     );
@@ -262,7 +122,6 @@ export default function SourcingCatalog() {
   // VIEW 2: STANDARD MAIN CATALOG SUMMARY DASHBOARD
   return (
     <div className="bg-[#f7f7f5] min-h-screen pb-20 text-stone-900 w-full">
-      
       <div className="w-full bg-stone-900 text-white pt-32 pb-20 px-6 mb-16">
         <div className="max-w-6xl mx-auto text-center">
           <p className="uppercase tracking-[0.4em] text-xs text-amber-400 font-semibold mb-2">Our Capabilities</p>
@@ -274,10 +133,9 @@ export default function SourcingCatalog() {
       </div>
 
       <div className="max-w-6xl mx-auto px-6">
-        
-        {/* Filter Navigation */}
+        {/* Dynamic Filter Navigation */}
         <div className="flex justify-center space-x-4 mb-12 border-b border-stone-200 pb-4">
-          {['all', 'knit', 'woven', 'denim'].map((tab) => (
+          {navigationTabs.map((tab) => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
@@ -345,7 +203,6 @@ export default function SourcingCatalog() {
             Request Custom Fabric Development
           </Link>
         </div>
-
       </div>
     </div>
   );

@@ -20,6 +20,7 @@ export default function AboutUs() {
   const reviews = [
     { quote: "SourcingHub has completely transformed our supply chain reliability. Their strict AQL adherence ensures we rarely face QA friction.", author: "Peter Grondin", company: "Pardon International, France" },
     { quote: "Finding fully compliant, LEED-certified factory matches in Bangladesh was a breeze with their local network infrastructure.", author: "Elena Rostova", company: "Urban Vibe, Germany" },
+    { quote: "Their transparency on fabric certification and carbon footprint metrics made our pivot to sustainable apparel effortless.", author: "Jameson Blake", company: "Econic Label, UK" },
     { quote: "Their transparency on fabric certification and carbon footprint metrics made our pivot to sustainable apparel effortless.", author: "Jameson Blake", company: "Econic Label, UK" }
   ];
 
@@ -27,9 +28,13 @@ export default function AboutUs() {
   // If a client does not have a website, leave url as an empty string '' or omit it completely.
   const clients = [
     { name: 'Pardon International', logo: '/logos/pardon.svg', url: 'https://www.pardon.re/fr/' },
-    { name: 'Lebon', logo: '/logos/lebon.svg', url: 'https://www.urbanvibe.de' },
-    { name: 'Bisco', logo: '/logos/bisco.svg', url: 'https://www.econiclabel.co.uk' },
-    { name: 'Sentencia Pace', logo: '/logos/sentencia.png', url: 'https://www.econiclabel.co.uk' }, // Non-clickable example
+    { name: 'Lebon', logo: '/logos/lebon.svg', url: 'https://lebonshop.re/?srsltid=AfmBOorGbDtpdee4KbLdqmuO5JsIlCuxrP7AjMq7dSQEfRfq0BXOb6B_' },
+    { name: 'Bisco', logo: '/logos/bisco.svg', url: '' },
+    { name: 'Sentencia Pace', logo: '/logos/sentencia.png', url: '' },
+    { name: 'Primark', logo: '/logos/primark.png', url: '' },
+    { name: 'H&M', logo: '/logos/h&m.png', url: '' },
+    { name: 'Pacsun', logo: '/logos/pacsun.png', url: '' },
+    { name: 'Zara', logo: '/logos/zara.png', url: '' },
   ];
 
   // Auto-sliding review logic

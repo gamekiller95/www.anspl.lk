@@ -11,7 +11,7 @@ export default function HomePage() {
         {/* 2. The Background Image Layer */}
         <div 
           className="absolute inset-0 bg-cover bg-center opacity-90 z-[1]"
-          style={{ backgroundImage: `url('/images/background-home.jpg')` }}
+          style={{ backgroundImage: `url('/images/homebackground.png')` }}
         />
 
         {/* 3. The Full Gray Overlay Layer */}
